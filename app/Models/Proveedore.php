@@ -4,19 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Empresa extends Model
+class Proveedore extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
+        'codigo',
         'razon_social',
         'cuit',
         'direccion',
         'telefono',
         'email',
+        'contacto',
+        'web',
+        'forma_pago_id',
+        'activo',
     ];
 
+    public function formaPago()
+    {
+        return $this->belongsTo('App\Models\FormaPago');
+    }
 }

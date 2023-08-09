@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empresas', function (Blueprint $table) {
+        Schema::create('forma_pagos', function (Blueprint $table) {
             $table->id();
-            $table->string('razon_social');
-            $table->string('cuit');
-            $table->string('direccion', 500);
-            $table->string('telefono');
-            $table->string('email');
+            $table->string('descripcion');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empresas');
+        Schema::dropIfExists('forma_pagos');
     }
 };

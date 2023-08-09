@@ -309,12 +309,12 @@ return [
         ],
         [
             'text' => 'Empresas',
-            'url'  => '#',
+            'route'=> 'admin.empresas.index',
             'icon' => 'fas fa-industry',
         ],
         [
             'text' => 'Proveedores',
-            'url'  => '#',
+            'route'=> 'admin.proveedores.index',
             'icon' => 'fas fa-fw fa-truck',
         ],
         [

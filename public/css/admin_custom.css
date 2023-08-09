@@ -1,1 +1,4 @@
-.main-sidebar { background-color: #1c1d65 !important }.
+.main-sidebar { background-color: #1c1d65 !important }
+.hiddenRow {
+    padding: 0 !important;
+}
