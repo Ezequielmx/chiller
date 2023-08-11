@@ -15,7 +15,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <!--input for codigo-->
                         <label for="codigo">Código</label>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <!--select for rubros-->
                         <label for="rubro_id">Rubro</label>
@@ -39,7 +39,8 @@
                         @error('producto.rubro_id') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
-
+            </div>
+            <div class="row">
                 <div class="col-sm-7">
                     <div class="form-group">
                         <!--input for nombre-->
@@ -51,11 +52,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-11">
+                <div class="col-sm-3">
                     <div class="form-group">
-                        <!--textarea for detalle-->
-                        <label for="detalle">Detalle</label>
-                        <textarea class="form-control" name="detalle" wire:model.defer="producto.detalle" rows="3"></textarea>
+                        <!--input for marca-->
+                        <label for="marca">Marca</label>
+                        <input type="text" class="form-control" placeholder="Marca" wire:model.defer="producto.marca">
                     </div>
                 </div>
                 <div class="col-sm-1">
@@ -63,6 +64,16 @@
                         <!--checkbox for activo-->
                         <label for="activo">Activo</label>
                         <input type="checkbox" wire:model.defer="activo" class="form-control" style="max-width: 30px">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="form-group">
+                        <!--textarea for detalle-->
+                        <label for="detalle">Detalle</label>
+                        <textarea class="form-control" name="detalle" wire:model.defer="producto.detalle"
+                            rows="3"></textarea>
                     </div>
                 </div>
             </div>
