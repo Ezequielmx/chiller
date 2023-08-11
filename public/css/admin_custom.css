@@ -2,3 +2,16 @@
 .hiddenRow {
     padding: 0 !important;
 }
+
+.nav-sidebar>.nav-item>.nav-treeview {
+    background-color: #007bff63 !important;
+    border-radius: 4px !important;
+}
+
+
+
+@media screen and (min-width: 1000px) {
+    .btnspct{
+        margin-top: 32px!important;
+    }
+}

@@ -317,11 +317,25 @@ return [
             'route'=> 'admin.proveedores.index',
             'icon' => 'fas fa-fw fa-truck',
         ],
+
+
         [
-            'text' => 'Productos',
-            'url'  => '#',
-            'icon' => 'fas fa-fw fa-boxes',
+            'text'    => 'Productos',
+            'icon'    => 'fas fa-fw fa-boxes',
+            'submenu' => [
+                [
+                    'text' => 'Rubros',
+                    'route'=> 'admin.rubros.index',
+                    'icon' => 'fas fa-list-ul',
+                ],
+                [
+                    'text' => 'Productos',
+                    'route'=> 'admin.productos.index',
+                    'icon' => 'fas fa-fw fa-boxes',
+                ],
+            ],
         ],
+
         [
             'text' => 'Clientes',
             'url'  => '#',
