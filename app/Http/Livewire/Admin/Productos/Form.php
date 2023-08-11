@@ -26,6 +26,7 @@ class Form extends Component
         if($id){
             $this->producto = Producto::find($id);
             $this->modeNew = false;
+            $this->activo = $this->producto->activo;
         }
         else
         {

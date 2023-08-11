@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Livewire\Admin\Rubros;
+
 use App\Models\Rubro;
 
 use Livewire\Component;
@@ -13,8 +14,10 @@ class Index extends Component
     public $detalle;
 
     public $newNombre;
-    public $newDetalle;         
-    
+    public $newDetalle;
+
+    protected $listeners = ['deleteRubro'];
+
     public function render()
     {
         $this->rubros = Rubro::orderBy('nombre')->get();
@@ -47,12 +50,14 @@ class Index extends Component
         $this->editing_id = null;
     }
 
-    public function deleteRubro($rubro_id){
+    public function deleteRubro($rubro_id)
+    {
         $rubro = Rubro::find($rubro_id);
         $rubro->delete();
     }
 
-    public function createRubro(){
+    public function createRubro()
+    {
         $this->validate([
             'newNombre' => 'required'
         ]);
@@ -65,5 +70,4 @@ class Index extends Component
         $this->newNombre = '';
         $this->newDetalle = '';
     }
-
 }
