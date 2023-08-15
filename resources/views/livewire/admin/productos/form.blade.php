@@ -15,17 +15,14 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div class="form-group">
-                        <!--input for codigo-->
-                        <label for="codigo">Código</label>
-                        <input type="text" class="form-control @error('producto.codigo') is-invalid @enderror"
-                            placeholder="Código" wire:model.defer="producto.codigo">
-                        @error('producto.codigo') <small class="text-danger">{{ $message }}</small>@enderror
+                        <label for="id">Id</label>
+                        <input type="text" class="form-control" disabled value={{ $modeNew? '' : $producto->id }}>
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <!--select for rubros-->
                         <label for="rubro_id">Rubro</label>
@@ -39,6 +36,14 @@
                         @error('producto.rubro_id') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
+
+                <div class="col-sm-1">
+                    <div class="form-group">
+                        <!--checkbox for activo-->
+                        <label for="activo">Activo</label>
+                        <input type="checkbox" wire:model.defer="activo" class="form-control" style="max-width: 30px">
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-sm-7">
@@ -48,22 +53,6 @@
                         <input type="text" class="form-control @error('producto.nombre') is-invalid @enderror"
                             placeholder="Nombre" wire:model.defer="producto.nombre">
                         @error('producto.nombre') <small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <!--input for marca-->
-                        <label for="marca">Marca</label>
-                        <input type="text" class="form-control" placeholder="Marca" wire:model.defer="producto.marca">
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <div class="form-group">
-                        <!--checkbox for activo-->
-                        <label for="activo">Activo</label>
-                        <input type="checkbox" wire:model.defer="activo" class="form-control" style="max-width: 30px">
                     </div>
                 </div>
             </div>

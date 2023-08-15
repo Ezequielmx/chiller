@@ -14,9 +14,7 @@ class Form extends Component
     public $activo = true;
     
     protected $rules = [
-        'producto.codigo' => 'required',
         'producto.nombre' => 'required|min:3',
-        'producto.marca' => 'nullable',
         'producto.rubro_id' => 'required',
         'producto.detalle' => 'nullable'
     ];

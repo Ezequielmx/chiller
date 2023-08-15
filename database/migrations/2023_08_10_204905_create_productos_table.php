@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo',50);
             $table->bigInteger('rubro_id');
             $table->string('nombre');
-            $table->string('marca')->nullable();
             $table->string('detalle')->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();

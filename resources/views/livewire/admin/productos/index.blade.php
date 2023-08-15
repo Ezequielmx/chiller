@@ -16,7 +16,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <!--select for rubros-->
-                        <label for="rubro_id">Rubro</label>
+                        <label for="rubro_id">Filtrar por Rubro</label>
                         <select class="form-control" wire:model="rubro_id">
                             <option value="">Seleccione un rubro</option>
                             @foreach ($rubros as $rubro)
@@ -49,30 +49,27 @@
             <table class="table table-striped table-responsive-sm">
                 <thead>
                     <tr>
-                        <th>Código</th>
+                        <th>Id</th>
                         <th>Rubro</th>
                         <th>Nombre</th>
-                        <th>Marca</th>
                         <th>Detalle</th>
                         <th>Activo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($productos as $producto)
                     <tr {{ $producto->activo? '' : 'style=color:darkgray' }}>
                         <td style="width: 10%">
-                            {{ $producto->codigo }}
+                            {{ $producto->id }}
                         </td>
                         <td style="width: 20%">
                             {{ $producto->rubro->nombre }}
                         </td>
-                        <td style="width: 20%">
+                        <td style="width: 30%">
                             {{ $producto->nombre }}
                         </td>
-                        <td style="width: 20%">
-                            {{ $producto->marca }}
-                        </td>
-                        <td style="width: 20%">
+                        <td style="width: 30%">
                             {{ $producto->detalle }}
                         </td>
                         <td style="width: 10%">
