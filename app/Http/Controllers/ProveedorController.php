@@ -28,7 +28,6 @@ class ProveedorController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'codigo' => 'required',
             'razon_social' => 'required',
             'cuit' => 'required',
             'direccion' => 'required',
@@ -51,7 +50,6 @@ class ProveedorController extends Controller
     public function update(Request $request, Proveedore $proveedore)
     {
         $request->validate([
-            'codigo' => 'required',
             'razon_social' => 'required',
             'cuit' => 'required',
             'direccion' => 'required',

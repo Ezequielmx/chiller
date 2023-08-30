@@ -338,12 +338,12 @@ return [
 
         [
             'text' => 'Clientes',
-            'url'  => '#',
+            'route'=> 'admin.clientes.index',
             'icon' => 'fas fa-user-tie',
         ],
         [
             'text' => 'Obras',
-            'url'  => '#',
+            'route'=> 'admin.obras.index',
             'icon' => 'fas fa-paint-roller',
         ],
         [
@@ -353,7 +353,7 @@ return [
         ],
         [
             'text' => 'Usuarios',
-            'url'  => '#',
+            'route'=> 'admin.usuarios.index',
             'icon' => 'fas fa-fw fa-users',
         ],
 

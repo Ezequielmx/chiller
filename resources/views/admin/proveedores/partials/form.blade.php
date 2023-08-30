@@ -1,14 +1,11 @@
 <div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-1">
         <div class="form-group">
-            {!! Form::label('codigo', 'Código') !!}
-            {!! Form::text('codigo', null, ['class'=>'form-control']) !!}
-            @error('codigo')
-            <small class="text-danger">{{ $message }}</small>
-            @enderror
+            {!! Form::label('id', 'Id') !!}
+            {!! Form::text('id', null, ['class'=>'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-5">
         <div class="form-group">
             {!! Form::label('razon_social', 'Razón Social') !!}
             {!! Form::text('razon_social', null, ['class'=>'form-control']) !!}

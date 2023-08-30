@@ -46,7 +46,4 @@ class Index extends Component
     {
         $producto->delete();
     }
-    
-
-
 }
