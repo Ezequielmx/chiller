@@ -74,7 +74,7 @@
                             {{ $obra->nombre }}
                         </td>
                         <td>
-                            $ {{ number_format($obra->presupuesto,2,',','.') }}
+                            {{ $obra->presupuesto }}
                         </td>
                         <td style="width: 10px">
                             @if ($obra->activo)

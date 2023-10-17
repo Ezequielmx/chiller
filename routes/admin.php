@@ -6,6 +6,7 @@ use App\Http\Controllers\RubroController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ObraController;
+use App\Http\Controllers\OrdenController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +17,4 @@ Route::resource('productos', ProductoController::class)->names('admin.productos'
 Route::resource('clientes', ClienteController::class)->names('admin.clientes');
 Route::resource('obras', ObraController::class)->names('admin.obras');
 Route::resource('usuarios', UsuarioController::class)->names('admin.usuarios');
+Route::resource('ordenes', OrdenController::class)->names('admin.ordenes');

@@ -59,15 +59,8 @@
                     <div class="form-group">
                         <!--input for presupuesto-->
                         <label for="presupuesto">Presupuesto</label>
-
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">$</div>
-                            </div>
-                            <input type="text" class="form-control @error('obra.presupuesto') is-invalid @enderror"
+                        <input type="text" class="form-control @error('obra.presupuesto') is-invalid @enderror"
                             placeholder="Presupuesto" wire:model.defer="obra.presupuesto">
-                        </div>
-
                         @error('obra.presupuesto') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>

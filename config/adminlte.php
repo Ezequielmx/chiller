@@ -348,7 +348,7 @@ return [
         ],
         [
             'text' => 'Órdenes Retiro',
-            'url'  => '#',
+            'route'=> 'admin.ordenes.index',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
         ],
         [

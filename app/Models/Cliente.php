@@ -10,5 +10,10 @@ class Cliente extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function obras()
+    {
+        return $this->hasMany(Obra::class);
+    }
     
 }
