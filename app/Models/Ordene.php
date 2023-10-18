@@ -67,4 +67,9 @@ class Ordene extends Model
     {
         return $this->belongsTo(Estado::class);
     }
+
+    public function detalles()
+    {
+        return $this->hasMany(OrdenDetalle::class);
+    }
 }

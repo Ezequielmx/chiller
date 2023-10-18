@@ -20,10 +20,11 @@ class Form extends Component
     public $proveedores;
     public $clientes;
     public $obras;
-    public $formaPago;
+    public $formasPago;
     public $users;
     public $estados;
 
+    public $ordenDetalles;
 
     protected $rules = [
         'orden.empresa_id' => 'required',
@@ -46,13 +47,14 @@ class Form extends Component
         $this->empresas = Empresa::all();
         $this->proveedores = Proveedore::all();
         $this->clientes = Cliente::all();
-        $this->formaPago = FormaPago::all();
+        $this->formasPago = FormaPago::all();
         $this->users = User::all();
         $this->estados = Estado::all();
         
         if($id){
             $this->orden = Ordene::find($id);
             $this->modeNew = false;
+            $this->ordenDetalles = $this->orden->detalles;
         }
         else
         {
@@ -60,6 +62,7 @@ class Form extends Component
             $this->modeNew = true;
             $this->orden->fecha = date('Y-m-d');
             $this->orden->user_id = auth()->user()->id;
+            $this->ordenDetalles = [];
         }        
     }
 
