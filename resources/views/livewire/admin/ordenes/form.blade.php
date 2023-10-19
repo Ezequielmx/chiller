@@ -189,7 +189,7 @@
                                     <th scope="col" class="text-center">Id</th>
                                     <th scope="col" class="text-center">Producto</th>
                                     <th scope="col" class="text-center">Cantidad</th>
-                                    <th scope="col" class="text-center">Unidad</th>
+                                    <th scope="col" class="text-center" style="min-width: 125px;">Unidad</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -271,7 +271,7 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col">
-                    <a href="{{ route('admin.obras.index') }}" class="btn btn-secondary ml-2 float-right">Cancelar</a>
+                    <a href="{{ route('admin.ordenes.index') }}" class="btn btn-secondary ml-2 float-right">Cancelar</a>
                     <button wire:click="guardar" class="btn btn-primary float-right">
                         @if($modeNew)
                         Crear Orden

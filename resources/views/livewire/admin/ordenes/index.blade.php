@@ -1,6 +1,17 @@
 <div>
     <div class="card">
         @if ($ordenes->count())
+        <div class="card-header">
+            <div class="card-title">
+                <h3>Ódenes</h3>
+            </div>
+            
+            <div class="card-tools">
+                <!--button for nueva Orden-->
+                <a class="btn btn-success btn-sm" href="{{ route('admin.ordenes.create') }}">Nueva Orden</a>
+            </div>
+
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-striped">
