@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Ordene;
+use App\Models\Producto;
+use App\Models\Unidade;
 
 class OrdenDetalle extends Model
 {
@@ -18,7 +21,7 @@ class OrdenDetalle extends Model
 
     public function orden()
     {
-        return $this->belongsTo(Ordene::class);
+        return $this->belongsTo(Ordene::class, 'orden_id');
     }
 
     public function producto()
@@ -28,7 +31,7 @@ class OrdenDetalle extends Model
 
     public function unidad()
     {
-        return $this->belongsTo(Unidad::class);
+        return $this->belongsTo(Unidade::class);
     }
 
 }

@@ -16,4 +16,9 @@ class Producto extends Model
         return $this->belongsTo(Rubro::class);
     }
 
+    public function scopeSearch($query, $searchTerm)
+    {
+        return $query->where('nombre', 'LIKE', '%'.$searchTerm.'%');
+    }
+
 }

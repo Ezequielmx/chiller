@@ -84,15 +84,15 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <!--select for forma pago-->
-                        <label for="forma_pago">Forma de pago</label>
-                        <select class="form-control @error('orden.forma_pago') is-invalid" @enderror name="forma_pago"
-                            id="forma_pago" wire:model.defer="orden.forma_pago">
+                        <label for="forma_pago_id">Forma de pago</label>
+                        <select class="form-control @error('orden.forma_pago_id') is-invalid" @enderror
+                            name="forma_pago_id" id="forma_pago_id" wire:model.defer="orden.forma_pago_id">
                             <option value="">Seleccione una forma de pago</option>
                             @foreach ($formasPago as $formaPago)
                             <option value="{{ $formaPago->id }}">{{ $formaPago->descripcion }}</option>
                             @endforeach
                         </select>
-                        @error('orden.forma_pago') <small class="text-danger">{{ $message }}</small>@enderror
+                        @error('orden.forma_pago_id') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
 
@@ -103,8 +103,8 @@
                     <div class="form-group">
                         <!--select for users_ret_id-->
                         <label for="users_ret_id">A retirar por</label>
-                        <select class="form-control @error('orden.users_ret_id') is-invalid" @enderror
-                            name="users_ret_id" id="users_ret_id" wire:model.defer="orden.users_ret_id">
+                        <select class="form-control @error('orden.user_ret_id') is-invalid" @enderror name="user_ret_id"
+                            id="user_ret_id" wire:model.defer="orden.user_ret_id">
                             <option value="">Seleccione un usuario</option>
                             @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -128,7 +128,7 @@
                         <!--input for user_aut_id-->
                         <label for="user_aut">Autorizado por</label>
                         <input type="text" class="form-control" name="user_aut" id="user_aut"
-                            value="{{ $orden->user_aut_id? User::find(user_aut_id)->name : '' }}" disabled>
+                            value="{{ $orden->user_aut_id? $orden->user_aut->name : '' }}" disabled>
                     </div>
                 </div>
 
@@ -190,33 +190,84 @@
                                     <th scope="col" class="text-center">Producto</th>
                                     <th scope="col" class="text-center">Cantidad</th>
                                     <th scope="col" class="text-center">Unidad</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($ordenDetalles as $ordenDetalle)
-                                <tr>
-                                    <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
-                                    <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
-                                    <td class="text-center">{{ $ordenDetalle->cantidad }}</td>
-                                    <td class="text-center">{{ $ordenDetalle->unidad->nombre }}</td>
+                                @if($modeNew)
+                                    @foreach ($ordenDetalles as $index => $ordenDetalle)
+                                    <tr>
+                                        <td class="text-center">{{ $ordenDetalle['producto_id'] }}</td>
+                                        <td class="text-center">{{ $ordenDetalle['producto']}}</td>
+                                        <td class="text-center">
+                                            <input type="number" wire:model="ordenDetalles.{{ $index }}.cantidad"
+                                                class="form-control" min="1">
+                                        </td>
+                                        <td class="text-center">
+                                            <!--select for unidad-->
+                                            <select class="form-control" name="unidades" id="unidades"
+                                                wire:model="ordenDetalles.{{ $index }}.unidad_id">
+                                                @foreach ($unidades as $unidad)
+                                                <option value="{{ $unidad->id }}">{{ $unidad->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('ordenDetalles.{{ $index }}.unidad_id') <small class="text-danger">{{
+                                                $message }}</small>@enderror
 
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger btn-sm"
-                                            wire:click='eliminar({{ $ordenDetalle->id }})'>
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
+                                        </td>
+
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                wire:click='removeProduct({{$index}})'>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    @foreach ($ordenDetalles as $ordenDetalle)
+                                    <tr>
+                                        <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
+                                        <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
+                                        <td class="text-center">
+                                            <input type="number"
+                                                wire:change="updateCantidad({{ $ordenDetalle->id }}, $event.target.value)"
+                                                class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}">
+                                        </td>
+                                        <td class="text-center">
+                                            <!--select for unidad-->
+                                            <select class="form-control" name="unidades" id="unidades"
+                                                wire:change='updateUnidad({{ $ordenDetalle->id }}, $event.target.value)'>
+                                                @foreach ($unidades as $unidad)
+                                                <option value="{{ $unidad->id }}" {{ $unidad->id ==
+                                                    $ordenDetalle->unidad_id?
+                                                    'selected' : '' }}>{{ $unidad->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                wire:click='removeProductG({{$ordenDetalle->id}})'>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!--end table boostrap for ordenDetalles-->
             </div>
-
-
+            <!--button for addProduct-->
+            <div class="row" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addProductModal">
+                    Agregar Productos
+                </button>
+            </div>
         </div>
+
         <div class="card-footer">
             <div class="row">
                 <div class="col">
@@ -228,6 +279,72 @@
                         Guardar
                         @endif
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- popup for find and select products-->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
+        aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content" style="max-height: 90vh; overflow: scroll;">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="productModalLabel">Productos</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-8">
+                            <label for="searchTerm">Buscar</label>
+                            <textarea name="Text1" rows="2" wire:model="searchTerm" class="form-control"
+                                placeholder="Buscar..."></textarea>
+                        </div>
+                        <div class="col-10 col-sm-3">
+                            <!--select for rubro-->
+                            <label for="rubro_id">Rubro</label>
+                            <select class="form-control @error('rubroSel') is-invalid" @enderror name="rubros"
+                                id="rubros" wire:model="rubroSel">
+                                <option value="">Todos los rubros</option>
+                                @foreach ($rubros as $rubro)
+                                <option value="{{ $rubro->id }}">{{ $rubro->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-2 col-sm-1">
+                            @if($products->count() == 0 && $rubroSel)
+                            <td>
+                                <label for="rubro_id">Nuevo</label>
+                                <button class="btn btn-success btn-sm" wire:click="insertProduct()"><i
+                                        class="fas fa-plus"></i>
+                                </button>
+                            </td>
+                            @endif
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-sm mt-3">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Rubro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($products as $product)
+                            <tr>
+                                <td>{{ $product->nombre }}</td>
+                                <td>{{ $product->rubro->nombre }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"
+                                        wire:click="addProduct({{ $product->id }})"><i class="fas fa-plus"></i></button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

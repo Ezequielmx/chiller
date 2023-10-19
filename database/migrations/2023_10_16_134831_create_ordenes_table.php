@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('empresa_id')->unsigned();
             $table->bigInteger('proveedor_id')->unsigned();
-            $table->bigInteger('ciente_id')->unsigned();
+            $table->bigInteger('cliente_id')->unsigned();
             $table->bigInteger('obra_id')->unsigned();
             $table->bigInteger('forma_pago_id')->unsigned();
             $table->bigInteger('user_ret_id')->unsigned();

@@ -21,3 +21,4 @@ class OrdenController extends Controller
         return view('admin.ordenes.edit', compact('id'));
     }
 }
+

@@ -19,9 +19,9 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    Livewire.on('deleteCli', cliente_id =>{
+    Livewire.on('deleteOrd', orden_id =>{
             Swal.fire({
-                title: 'Está seguro que desea eliminar este Cliente?',
+                title: 'Está seguro que desea eliminar esta Orden?',
                 text: "No se puede revertir esto!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -31,10 +31,10 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.emit('deleteCliente', cliente_id);
+                    Livewire.emit('deleteOrden', orden_id);
                     Swal.fire(
-                    'Eliminao!',
-                    'El Cliente ha sido eliminado.',
+                    'Eliminada!',
+                    'La orden ha sido eliminada.',
                     'success'
                     )
                 }

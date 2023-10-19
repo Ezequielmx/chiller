@@ -35,7 +35,7 @@ class Ordene extends Model
 
     public function proveedor()
     {
-        return $this->belongsTo(Proveedor::class, 'proveedor_id');
+        return $this->belongsTo(Proveedore::class, 'proveedor_id');
     }
 
     public function cliente()
@@ -70,6 +70,6 @@ class Ordene extends Model
 
     public function detalles()
     {
-        return $this->hasMany(OrdenDetalle::class);
+        return $this->hasMany(OrdenDetalle::class, 'orden_id');
     }
 }
