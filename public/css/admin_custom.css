@@ -15,3 +15,19 @@
         margin-top: 32px!important;
     }
 }
+
+.pendiente{
+    background-color: #cecece !important;
+}
+
+.enviada{
+    background-color: #ffffff !important;
+}
+
+.retirada{
+    background-color: #a2f3ae !important;
+}
+
+.cerrada{
+    background-color: #92d4f0 !important;
+}

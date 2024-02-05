@@ -63,6 +63,7 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Rol</th>
+                        <th>Copia Mails</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -76,6 +77,13 @@
                             @foreach ($usuario->roles as $rol)
                                 ◾ {{ $rol->name }}
                             @endforeach
+                        </td>
+                        <td style="text-align:center">
+                            @if ($usuario->copiamail)
+                            <span class="badge badge-success">Si</span>
+                            @else
+                            <span class="badge badge-secondary">No</span>
+                            @endif
                         </td>
     
                         <td width="10px">

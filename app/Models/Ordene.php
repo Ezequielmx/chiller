@@ -72,4 +72,9 @@ class Ordene extends Model
     {
         return $this->hasMany(OrdenDetalle::class, 'orden_id');
     }
+
+    public function user_retira(){
+        return $this->belongsTo(User::class, 'user_ret_id');
+    }
+
 }

@@ -304,18 +304,21 @@ return [
 
         [
             'text' => 'Dashboard',
-            'url'  => '',
+            'route'=> 'home',
             'icon' => 'fas fa-tachometer-alt',
+            'can'  => 'dash'
         ],
         [
             'text' => 'Empresas',
             'route'=> 'admin.empresas.index',
             'icon' => 'fas fa-industry',
+            'can'  => 'empresas'
         ],
         [
             'text' => 'Proveedores',
             'route'=> 'admin.proveedores.index',
             'icon' => 'fas fa-fw fa-truck',
+            'can'  => 'proveedores'
         ],
 
 
@@ -327,24 +330,29 @@ return [
                     'text' => 'Rubros',
                     'route'=> 'admin.rubros.index',
                     'icon' => 'fas fa-list-ul',
+                    'can'  => 'rubrros'
                 ],
                 [
                     'text' => 'Productos',
                     'route'=> 'admin.productos.index',
                     'icon' => 'fas fa-fw fa-boxes',
+                    'can'   => 'productos'
                 ],
-            ],
+            ] ,
+            'can'   => 'productos'
         ],
 
         [
             'text' => 'Clientes',
             'route'=> 'admin.clientes.index',
             'icon' => 'fas fa-user-tie',
+            'can'  => 'clientes'
         ],
         [
             'text' => 'Obras',
             'route'=> 'admin.obras.index',
             'icon' => 'fas fa-paint-roller',
+            'can'  => 'obras'
         ],
         [
             'text' => 'Órdenes Retiro',
@@ -355,6 +363,7 @@ return [
             'text' => 'Usuarios',
             'route'=> 'admin.usuarios.index',
             'icon' => 'fas fa-fw fa-users',
+            'can'  => 'usuarios'
         ],
 
     ],

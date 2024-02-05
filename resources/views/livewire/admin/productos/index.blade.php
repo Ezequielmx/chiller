@@ -22,7 +22,7 @@
                             @foreach ($rubros as $rubro)
                             <option value="{{ $rubro->id }}">{{ $rubro->nombre }}</option>
                             @endforeach
-                        </select> 
+                        </select>
                     </div>
                 </div>
 
@@ -82,8 +82,10 @@
                         <td style="white-space: nowrap; width: 10px">
                             <a href="{{ route('admin.productos.edit', $producto->id) }}"
                                 class="btn btn-primary btn-sm mr-1"><i class="fa fa-edit"></i></a>
-                            <button wire:click="$emit('deleteProd',{{ $producto->id }})" class="btn btn-danger btn-sm"><i
-                                    class="fa fa-trash"></i></button>
+                            <button wire:click="$emit('deleteProd',{{ $producto->id }})" data-toggle="tooltip"
+                                title="No se puede eliminar este producto. Está incluido en una orden de compra"
+                                class="btn btn-danger btn-sm" {{!$producto->ordenDetalles->count()==0? 'disabled' : ''
+                                }}><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>
                     @endforeach

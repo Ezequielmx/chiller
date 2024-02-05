@@ -17,6 +17,7 @@ class OrdenDetalle extends Model
         'producto_id',
         'cantidad',
         'unidad_id',
+        'precio'
     ];
 
     public function orden()

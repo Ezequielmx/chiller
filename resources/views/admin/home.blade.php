@@ -1,13 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>DASHBOARD</h1>
-@stop
+@section('title', 'Rubros')
 
 @section('content')
-    <p></p>
+    @livewire('admin.dashboard')
 @stop
 
 @section('css')

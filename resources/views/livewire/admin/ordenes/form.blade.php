@@ -13,6 +13,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card-body">
             <div class="row">
                 <div class="col-6 col-sm-2">
@@ -113,6 +114,7 @@
                         @error('orden.users_ret_id') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
+                @if(!$modeNew)
                 <div class="col-3 col-sm-1">
                     <div class="form-group">
                         <!--checkbox for retirado-->
@@ -121,7 +123,9 @@
                             name="retirado" id="retirado" wire:model.defer="orden.retirado">
                     </div>
                 </div>
+
                 <div class="col-sm-1"></div>
+
 
                 <div class="col-9 col-sm-4">
                     <div class="form-group">
@@ -133,6 +137,7 @@
                 </div>
 
                 <div class="col-3 col-sm-2">
+                    @can('orden.autorize')
                     <div class="form-group">
                         @if (!$orden->autorizado)
                         <label>Autorizar</label>
@@ -149,9 +154,12 @@
 
                         @endif
                     </div>
+                    @endcan
                 </div>
+                @endif
 
             </div>
+            @if(!$modeNew)
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -161,6 +169,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <hr>
             <div class="row">
                 <div class="col-sm-4">
@@ -190,70 +199,94 @@
                                     <th scope="col" class="text-center">Producto</th>
                                     <th scope="col" class="text-center">Cantidad</th>
                                     <th scope="col" class="text-center" style="min-width: 125px;">Unidad</th>
+                                    <th scope="col" class="text-right" style="min-width: 125px;">Precio</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if($modeNew)
-                                    @foreach ($ordenDetalles as $index => $ordenDetalle)
-                                    <tr>
-                                        <td class="text-center">{{ $ordenDetalle['producto_id'] }}</td>
-                                        <td class="text-center">{{ $ordenDetalle['producto']}}</td>
-                                        <td class="text-center">
-                                            <input type="number" wire:model="ordenDetalles.{{ $index }}.cantidad"
-                                                class="form-control" min="1">
-                                        </td>
-                                        <td class="text-center">
-                                            <!--select for unidad-->
-                                            <select class="form-control" name="unidades" id="unidades"
-                                                wire:model="ordenDetalles.{{ $index }}.unidad_id">
-                                                @foreach ($unidades as $unidad)
-                                                <option value="{{ $unidad->id }}">{{ $unidad->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('ordenDetalles.{{ $index }}.unidad_id') <small class="text-danger">{{
-                                                $message }}</small>@enderror
+                                @foreach ($ordenDetalles as $index => $ordenDetalle)
+                                <tr>
+                                    <td class="text-center">{{ $ordenDetalle['producto_id'] }}</td>
+                                    <td class="text-center">{{ $ordenDetalle['producto']}}</td>
+                                    <td class="text-center">
+                                        <input type="number" wire:model="ordenDetalles.{{ $index }}.cantidad"
+                                            class="form-control" min="1">
+                                    </td>
+                                    <td class="text-center">
+                                        <!--select for unidad-->
+                                        <select class="form-control" name="unidades" id="unidades"
+                                            wire:model="ordenDetalles.{{ $index }}.unidad_id">
+                                            @foreach ($unidades as $unidad)
+                                            <option value="{{ $unidad->id }}">{{ $unidad->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('ordenDetalles.{{ $index }}.unidad_id') <small class="text-danger">{{
+                                            $message }}</small>@enderror
 
-                                        </td>
+                                    </td>
 
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                wire:click='removeProduct({{$index}})'>
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                    <td class="text-right">
+                                        <input type="number" step="any" wire:model="ordenDetalles.{{ $index }}.precio"
+                                            class="form-control text-right">
+                                    </td>
+
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            wire:click='removeProduct({{$index}})'>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="4" class="text-right">Total</td>
+                                    <td class="text-right">
+                                        {{ number_format(collect($ordenDetalles)->sum('precio'), 2, ',', '.') }}
+                                    </td>
+                                </tr>
                                 @else
-                                    @foreach ($ordenDetalles as $ordenDetalle)
-                                    <tr>
-                                        <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
-                                        <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
-                                        <td class="text-center">
-                                            <input type="number"
-                                                wire:change="updateCantidad({{ $ordenDetalle->id }}, $event.target.value)"
-                                                class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}">
-                                        </td>
-                                        <td class="text-center">
-                                            <!--select for unidad-->
-                                            <select class="form-control" name="unidades" id="unidades"
-                                                wire:change='updateUnidad({{ $ordenDetalle->id }}, $event.target.value)'>
-                                                @foreach ($unidades as $unidad)
-                                                <option value="{{ $unidad->id }}" {{ $unidad->id ==
-                                                    $ordenDetalle->unidad_id?
-                                                    'selected' : '' }}>{{ $unidad->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
+                                @foreach ($ordenDetalles as $ordenDetalle)
+                                <tr>
+                                    <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
+                                    <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
+                                    <td class="text-center">
+                                        <input type="number"
+                                            wire:change="updateCantidad({{ $ordenDetalle->id }}, $event.target.value)"
+                                            class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}">
+                                    </td>
+                                    <td class="text-center">
+                                        <!--select for unidad-->
+                                        <select class="form-control" name="unidades" id="unidades"
+                                            wire:change='updateUnidad({{ $ordenDetalle->id }}, $event.target.value)'>
+                                            @foreach ($unidades as $unidad)
+                                            <option value="{{ $unidad->id }}" {{ $unidad->id ==
+                                                $ordenDetalle->unidad_id?
+                                                'selected' : '' }}>{{ $unidad->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
 
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-danger btn-sm"
-                                                wire:click='removeProductG({{$ordenDetalle->id}})'>
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                    <td>
+                                        <input type="number" step="any" value="{{ $ordenDetalle->precio }}"
+                                            class="form-control text-right"
+                                            wire:change='updatePrecio({{ $ordenDetalle->id }}, $event.target.value)'>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                            wire:click='removeProductG({{$ordenDetalle->id}})'>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="4" class="text-right">Total</td>
+                                    <td class="text-right">
+                                        {{ number_format($ordenDetalles->sum('precio'), 2, ',', '.') }}
+                                    </td>
+                                </tr>
                                 @endif
                             </tbody>
                         </table>
@@ -271,18 +304,40 @@
         <div class="card-footer">
             <div class="row">
                 <div class="col">
-                    <a href="{{ route('admin.ordenes.index') }}" class="btn btn-secondary ml-2 float-right">Cancelar</a>
-                    <button wire:click="guardar" class="btn btn-primary float-right">
-                        @if($modeNew)
-                        Crear Orden
-                        @else
-                        Guardar
-                        @endif
-                    </button>
+
+                    <a href="{{ route('admin.ordenes.index') }}" class="btn btn-secondary">Cancelar</a>
+
                 </div>
+                <div class="col">
+                    @if($orden->estado_id==1)
+                    <div class="row" style="justify-content: flex-end;">
+                        <button wire:click="guardar" class="btn btn-primary">
+                            @if($modeNew)
+                            Crear Borrador
+                            @else
+                            Guardar Borrador
+                            @endif
+                        </button>
+
+                        <button wire:click="$emit('createOrd')" class="btn btn-success ml-2">
+                            Crear Orden y enviar a Proveedor
+                        </button>
+                    </div>
+                    @else
+                    <div class="row" style="justify-content: flex-end;">
+                        <button wire:click="guardar" class="btn btn-primary">
+                            Guardar
+                        </button>
+                    </div>
+                    @endif
+                </div>
+
+
+
             </div>
         </div>
     </div>
+
 
     <!-- popup for find and select products-->
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
@@ -349,5 +404,4 @@
             </div>
         </div>
     </div>
-
 </div>

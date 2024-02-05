@@ -26,4 +26,9 @@ class Proveedore extends Model
     {
         return $this->belongsTo('App\Models\FormaPago');
     }
+
+    public function ordenes()
+    {
+        return $this->hasMany('App\Models\Ordene', 'proveedor_id');
+    }
 }

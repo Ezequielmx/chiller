@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Ordenes;
 
+use App\Mail\EnviaOrden;
 use Livewire\Component;
 use App\Models\Ordene;
 use App\Models\Empresa;
@@ -14,6 +15,10 @@ use App\Models\Producto;
 use App\Models\Rubro;
 use App\Models\Unidade;
 use App\Models\OrdenDetalle;
+
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class Form extends Component
 {
@@ -36,6 +41,8 @@ class Form extends Component
     public $unidades;
 
     public $searchTerm;
+
+    protected $listeners = ['guardar'];
 
     protected $rules = [
         'orden.empresa_id' => 'required',
@@ -82,22 +89,34 @@ class Form extends Component
 
     public function render()
     {
-        if ($this->orden->cliente_id){
+        if ($this->orden->cliente_id) {
             $this->obras = $this->orden->cliente->obras;
-        }else{
+        } else {
             $this->obras = [];
         }
 
         if (!$this->modeNew) {
             $this->orden = Ordene::find($this->orden_id);
             $this->ordenDetalles = $this->orden->detalles;
-        } 
-            
-        $this->products = Producto::where('activo', 1)->search($this->searchTerm)->orderBy('nombre')
-            ->when($this->rubroSel, function ($query, $rubroSel) {
-                return $query->where('rubro_id', $rubroSel);
-            })
-            ->get();
+        }
+
+        if (!$this->modeNew) {
+            $this->products = Producto::where('activo', 1)
+                ->whereNotIn('id', $this->ordenDetalles->pluck('producto_id')->toArray())
+                ->search($this->searchTerm)->orderBy('nombre')
+                ->when($this->rubroSel, function ($query, $rubroSel) {
+                    return $query->where('rubro_id', $rubroSel);
+                })
+                ->get();
+        } else {
+            $this->products = Producto::where('activo', 1)
+                ->whereNotIn('id', array_column($this->ordenDetalles, 'producto_id'))
+                ->search($this->searchTerm)->orderBy('nombre')
+                ->when($this->rubroSel, function ($query, $rubroSel) {
+                    return $query->where('rubro_id', $rubroSel);
+                })
+                ->get();
+        }
 
         return view('livewire.admin.ordenes.form');
     }
@@ -109,15 +128,16 @@ class Form extends Component
                 'producto_id' => $producto->id,
                 'producto' => $producto->nombre,
                 'cantidad' => 1,
-                'unidad_id' => 1
+                'unidad_id' => 1,
+                'precio' => 0
             ];
-        }
-        else{
+        } else {
             $ordenDetalle = new OrdenDetalle();
             $ordenDetalle->orden_id = $this->orden->id;
             $ordenDetalle->producto_id = $producto->id;
             $ordenDetalle->cantidad = 1;
             $ordenDetalle->unidad_id = 1;
+            $ordenDetalle->precio = 0;
             $ordenDetalle->save();
         }
     }
@@ -144,18 +164,24 @@ class Form extends Component
         $ordenDetalle->save();
     }
 
-    public function guardar()
+    public function updatePrecio(OrdenDetalle $ordenDetalle, $precio)
+    {
+        if ($precio == "")
+            $precio = 0;
+
+ 
+        $ordenDetalle->precio = $precio;
+        $ordenDetalle->save();
+    }
+
+    public function guardar(bool $mail = false)
     {
         $this->validate();
 
-        if($this->orden->autorizado == 1){
+        if ($this->orden->factura) {
             $this->orden->estado_id = 4;
-        }elseif($this->orden->factura){
+        } elseif ($this->orden->retirado) {
             $this->orden->estado_id = 3;
-        }elseif($this->orden->retirado){
-            $this->orden->estado_id = 2;
-        }else{
-            $this->orden->estado_id = 1;
         }
 
         $this->orden->save();
@@ -170,21 +196,70 @@ class Form extends Component
                 $ordenDetalle->save();
             }
 
+
+            if ($mail) {
+                $this->sendMail();
+            }
+
             return redirect()->route('admin.ordenes.index')->with('info', 'Orden creada con éxito');
         } else {
+
+            if ($mail) {
+                $this->sendMail();
+            }
+
             return redirect()->route('admin.ordenes.index')->with('info', 'Orden actualizada con éxito');
         }
     }
 
-    public function autorizar(){
+    public function autorizar()
+    {
         $this->orden->autorizado = 1;
         $this->orden->user_aut_id = auth()->user()->id;
         $this->orden->save();
     }
 
-    public function cancelarAutorizacion(){
+    public function cancelarAutorizacion()
+    {
         $this->orden->autorizado = 0;
         $this->orden->user_aut_id = null;
+        $this->orden->save();
+    }
+
+    public function insertProduct()
+    {
+        $prod = new Producto();
+        $prod->nombre = $this->searchTerm;
+        $prod->rubro_id = $this->rubroSel;
+        $prod->save();
+        $this->searchTerm = '';
+        $this->rubroSel = null;
+
+        $this->addProduct($prod);
+    }
+
+    public function createOrden()
+    {
+        $this->guardar(true);
+    }
+
+    public function sendMail()
+    {
+
+        $orden = $this->orden;
+        $pdf = PDF::loadView('admin.ordenes.print', compact('orden'));
+
+        //return $pdf->stream('orden.pdf');
+
+        $filename = 'OR_N°' . $orden->id . '_' . $orden->proveedor->razon_social . '_' . date('Ymd', strtotime($orden->fecha)) . '.pdf';
+        $path = 'pdf/' . $filename;
+
+        Storage::put($path, $pdf->output());
+
+        Mail::to($this->orden->proveedor->email)
+            ->send(new EnviaOrden($this->orden->empresa->email, $this->orden->empresa->razon_social, $this->orden->id, $path));
+
+        $this->orden->estado_id = 2;
         $this->orden->save();
     }
 }

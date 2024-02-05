@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrdenController;
+use App\Mail\EnviaOrden;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,20 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class,'index'])->middleware('auth');
+Route::get('/', function () {
+    return redirect()->route('admin.ordenes.index');
+})->middleware('auth');
 
-
-/*
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});*/
-
-//Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/mail', function () {
+    Mail::to('ezequielmx@gmail.com')->send(new EnviaOrden('ordenes@chillersystem.com', 'Chiller System'));
+    return 'Mensaje enviado 2';
+})->name('mail');

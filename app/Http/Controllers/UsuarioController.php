@@ -26,8 +26,8 @@ class UsuarioController extends Controller
     {
         $request->validate([
             'nombre' => 'required',
-            'email' =>'required',
-            'pass' =>'required|min:8',
+            'email' => 'required|email|unique:users',
+            'pass' => 'required|min:8',
         ]);
 
         $passhash = Hash::make($request->pass);
@@ -61,19 +61,25 @@ class UsuarioController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' =>'required',
-            'pass' =>'nullable|min:8',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'pass' => 'nullable|min:8',
+            'copiamail' => 'nullable'
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
-        
-        if($request->pass != null){
+        $user->copiamail = $request->copiamail;
+        //if user->copiamail is null set to 0
+        if ($user->copiamail == null) {
+            $user->copiamail = 0;
+        }
+
+        if ($request->pass != null) {
             $passhash = Hash::make($request->pass);
             $user->password = $passhash;
         }
 
-        if($request->client_id != null){
+        if ($request->client_id != null) {
             $user->client_id = $request->client_id;
         }
 
@@ -81,12 +87,11 @@ class UsuarioController extends Controller
         $user->roles()->sync($request->roles);
 
         return redirect()->route('admin.usuarios.index')->with('info', 'Usuario modificado con éxito');
-
     }
 
     public function destroy(User $usuario)
     {
-       $usuario->delete();
-       return redirect()->route('admin.usuarios.index')->with('info', 'Usuario eliminado con éxito');
+        $usuario->delete();
+        return redirect()->route('admin.usuarios.index')->with('info', 'Usuario eliminado con éxito');
     }
 }
