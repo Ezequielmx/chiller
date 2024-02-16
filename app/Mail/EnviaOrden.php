@@ -54,7 +54,7 @@ class EnviaOrden extends Mailable
                 name: $this->fromName,
             ),
             subject: 'Nueva Orden de Retiro',
-            cc: array_map(function ($email) {
+            bcc: array_map(function ($email) {
                 return new Address(address: $email);
             }, $ccEmails),
         );

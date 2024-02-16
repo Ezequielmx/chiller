@@ -40,6 +40,8 @@ class Form extends Component
     public $rubroSel;
     public $unidades;
 
+    public $status_mail = '';
+
     public $searchTerm;
 
     protected $listeners = ['guardar'];
@@ -201,14 +203,14 @@ class Form extends Component
                 $this->sendMail();
             }
 
-            return redirect()->route('admin.ordenes.index')->with('info', 'Orden creada con éxito');
+            return redirect()->route('admin.ordenes.index')->with('info', 'Orden creada con éxito.' . $this->status_mail);
         } else {
 
             if ($mail) {
                 $this->sendMail();
             }
 
-            return redirect()->route('admin.ordenes.index')->with('info', 'Orden actualizada con éxito');
+            return redirect()->route('admin.ordenes.index')->with('info', 'Orden actualizada con éxito.' . $this->status_mail);
         }
     }
 
@@ -245,7 +247,6 @@ class Form extends Component
 
     public function sendMail()
     {
-
         $orden = $this->orden;
         $pdf = PDF::loadView('admin.ordenes.print', compact('orden'));
 
@@ -256,10 +257,17 @@ class Form extends Component
 
         Storage::put($path, $pdf->output());
 
-        Mail::to($this->orden->proveedor->email)
-            ->send(new EnviaOrden($this->orden->empresa->email, $this->orden->empresa->razon_social, $this->orden->id, $path));
+        try{
+            Mail::to($this->orden->proveedor->email)
+                ->send(new EnviaOrden($this->orden->empresa->email, $this->orden->empresa->razon_social, $this->orden->id, $path));
 
-        $this->orden->estado_id = 2;
+            $this->status_mail = 'Mail enviado';
+            $this->orden->estado_id = 2;
+        } catch (\Exception $e) {
+            $this->status_mail = 'Error al enviar mail: ' . $e->getMessage();
+        }
+
+        
         $this->orden->save();
     }
 }

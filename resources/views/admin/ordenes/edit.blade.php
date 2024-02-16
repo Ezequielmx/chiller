@@ -32,7 +32,7 @@
                     Livewire.emit('guardar', true);
                     Swal.fire(
                         'Creada!',
-                        'La orden fue creada y enviada al proveedor.',
+                        'La orden fue creada y está siendo enviada al proveedor...',
                         'success'
                     )
                 }

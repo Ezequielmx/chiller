@@ -23,6 +23,6 @@ Route::get('/', function () {
 })->middleware('auth');
 
 Route::get('/mail', function () {
-    Mail::to('ezequielmx@gmail.com')->send(new EnviaOrden('ordenes@chillersystem.com', 'Chiller System'));
+    Mail::to('ezequielmx@gmail.com')->send(new EnviaOrden('ordenes@chillersystem.com', 'Chiller System', 27, ''));
     return 'Mensaje enviado 2';
 })->name('mail');
