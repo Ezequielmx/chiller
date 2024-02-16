@@ -64,13 +64,13 @@ class Form extends Component
     public function mount($id = null)
     {
         $this->empresas = Empresa::all();
-        $this->proveedores = Proveedore::all();
-        $this->clientes = Cliente::all();
+        $this->proveedores = Proveedore::orderBy('razon_social')->get();
+        $this->clientes = Cliente::orderBy('razon_social')->get();
         $this->formasPago = FormaPago::all();
-        $this->users = User::all();
+        $this->users = User::orderBy('name')->get();
         $this->estados = Estado::all();
         $this->rubros = Rubro::all();
-        $this->unidades = Unidade::all();
+        $this->unidades = Unidade::orderBy('nombre')->get();
 
 
         if ($id) {
