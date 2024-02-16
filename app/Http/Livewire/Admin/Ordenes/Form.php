@@ -92,7 +92,7 @@ class Form extends Component
     public function render()
     {
         if ($this->orden->cliente_id) {
-            $this->obras = $this->orden->cliente->obras;
+            $this->obras = $this->orden->cliente->obras->where('activo', 1);
         } else {
             $this->obras = [];
         }

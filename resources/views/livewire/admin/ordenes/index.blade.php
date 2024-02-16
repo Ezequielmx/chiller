@@ -109,7 +109,7 @@
                             @endif
                         </td>
                         <td width="10px" style="text-wrap: nowrap;">
-                            @if($orden->estado_id < 3)
+                            @if ($orden->estado_id < 3 or auth()->user()->roles->first()->id > 2)
                                 @can('orden.edit')
                                 <a class="btn btn-primary btn-sm"
                                     href="{{ route('admin.ordenes.edit', $orden->id) }}">Editar</a>  
