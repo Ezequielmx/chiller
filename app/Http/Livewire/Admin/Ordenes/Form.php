@@ -258,7 +258,7 @@ class Form extends Component
 
         //return $pdf->stream('orden.pdf');
 
-        $filename = 'OR_N°' . $orden->id . '_' . $orden->proveedor->razon_social . '_' . date('Ymd', strtotime($orden->fecha)) . '.pdf';
+        $filename = 'OR_N°' . $orden->nro . '_' . $orden->proveedor->razon_social . '_' . date('Ymd', strtotime($orden->fecha)) . '.pdf';
         $path = 'pdf/' . $filename;
 
         Storage::put($path, $pdf->output());
