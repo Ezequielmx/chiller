@@ -18,8 +18,8 @@
             <div class="row">
                 <div class="col-6 col-sm-2">
                     <div class="form-group">
-                        <label for="id">Id</label>
-                        <input type="text" class="form-control" disabled value={{ $modeNew? '' : $orden->id }}>
+                        <label for="nro">Nro</label>
+                        <input type="text" class="form-control" disabled value={{ $modeNew? '' : $orden->nro }}>
                     </div>
                 </div>
                 <div class="col-6 col-sm-2">
@@ -99,6 +99,20 @@
 
             </div>
             <div class="row">
+
+                <div class="col-12 col-sm-4">
+                    <div class="form-group">
+                        <!--select for users_solic_id-->
+                        <label for="users_solic_id">Solicitada por</label>
+                        <select class="form-control" id="user_solic_id" wire:model.defer="orden.user_solic_id">
+                            <option value="">Seleccione un usuario</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('orden.users_solic_id') <small class="text-danger">{{ $message }}</small>@enderror
+                    </div>
+                </div>
 
                 <div class="col-9 col-sm-4">
                     <div class="form-group">

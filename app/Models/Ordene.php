@@ -63,6 +63,11 @@ class Ordene extends Model
         return $this->belongsTo(User::class, 'user_aut_id');
     }
 
+    public function user_solic()
+    {
+        return $this->belongsTo(User::class, 'user_solic_id');
+    }
+
     public function estado()
     {
         return $this->belongsTo(Estado::class);

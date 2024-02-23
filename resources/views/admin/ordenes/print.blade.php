@@ -117,7 +117,7 @@ setlocale(LC_TIME, "spanish");
                         </tr>
                         <tr>
                             <td style="height: 35px">
-                                <h3>Orden Nro: <b>{{ $orden->id }}</b></h3>
+                                <h3>Orden Nro: <b>{{ $orden->nro }}</b></h3>
                             </td>
                         </tr>
                     </table>
@@ -164,9 +164,13 @@ setlocale(LC_TIME, "spanish");
             <td style="width: 35%">
                 <h3>Retira: <b>{{ $orden->user_ret? $orden->user_ret->name : '' }}</b></h3>
                 <hr>
-                <h3>Obra: <b>{{ $orden->obra->nombre }}</b></h3> 
+                <h3>Obra: <b>{{ $orden->obra->nombre }}</b></h3>
+                <h3>Presupuesto: <b>{{ $orden->obra->presupuesto }}</b></h3>  
             </td>
             <td style="width: 25%">
+                Solicitó
+                <h3><b>{{ $orden->user_solic? $orden->user_solic->name : '' }}</b></h3>
+                <hr>
                 Confeccionó
                 <h3><b>{{ $orden->user->name }}</b></h3>
             </td>

@@ -56,6 +56,7 @@ class Form extends Component
         'orden.forma_pago_id' => 'required',
         'orden.user_ret_id' => 'required',
         'orden.user_aut_id' => 'nullable',
+        'orden.user_solic_id' => 'nullable',
         'orden.factura' => 'nullable',
         'orden.retirado' => 'required',
         'orden.estado_id' => 'required',
@@ -171,7 +172,7 @@ class Form extends Component
         if ($precio == "")
             $precio = 0;
 
- 
+
         $ordenDetalle->precio = $precio;
         $ordenDetalle->save();
     }
@@ -184,6 +185,11 @@ class Form extends Component
             $this->orden->estado_id = 4;
         } elseif ($this->orden->retirado) {
             $this->orden->estado_id = 3;
+        }
+
+        if ($this->modeNew) {
+            $nro = Ordene::where('empresa_id', $this->orden->empresa_id)->max('nro')+1;
+            $this->orden->nro = $nro;
         }
 
         $this->orden->save();
@@ -257,8 +263,18 @@ class Form extends Component
 
         Storage::put($path, $pdf->output());
 
-        try{
-            Mail::to($this->orden->proveedor->email)
+        $emails = explode(';', $this->orden->proveedor->email);
+        $to = trim($emails[0]);
+        $cc = array_map('trim', array_slice($emails, 1));
+
+        //add to cc the email of the user_solic of the order
+        if ($this->orden->user_solic_id) {
+            $cc[] = $this->orden->user_solic->email;
+        }
+
+        try {
+            Mail::to($to)
+                ->cc($cc)
                 ->send(new EnviaOrden($this->orden->empresa->email, $this->orden->empresa->razon_social, $this->orden->id, $path));
 
             $this->status_mail = 'Mail enviado';
@@ -267,7 +283,7 @@ class Form extends Component
             $this->status_mail = 'Error al enviar mail: ' . $e->getMessage();
         }
 
-        
+
         $this->orden->save();
     }
 }

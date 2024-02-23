@@ -82,11 +82,12 @@
             <table class="table table-striped table-responsive-sm">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Nro</th>
                         <th>Realizada por</th>
                         <th>Retira</th>
                         <th>Proveedor</th>
                         <th>Fecha</th>
+                        <th>Presup</th>
                         <th>Estado</th>
                         <th>Autorizada</th>
                         <th>Acciones</th>
@@ -95,11 +96,12 @@
                 <tbody>
                     @foreach ($ordenes as $orden)
                     <tr class="{{ strtolower($orden->estado->nombre) }}">
-                        <td>{{ $orden->id }}</td>
+                        <td>{{ $orden->nro }}</td>
                         <td>{{ $orden->user->name }}</td>
                         <td>{{ $orden->user_ret->name }}</td>
                         <td>{{ $orden->proveedor->razon_social}}</td>
                         <td>{{ date('d-m-Y',strtotime($orden->fecha)) }}</td>
+                        <td>{{ $orden->obra->presupuesto }}</td>
                         <td>{{ $orden->estado->nombre }}</td>
                         <td style="width: 10%">
                             @if ($orden->autorizado)
