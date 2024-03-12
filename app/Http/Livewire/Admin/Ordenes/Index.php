@@ -48,9 +48,10 @@ class Index extends Component
         ->when($this->user->hasRole('Operario Retiros'), function ($query) {
             $query->where('user_ret_id', $this->user->id);
         })
+        /*
         ->when($this->user->hasRole('Generador Ordenes'), function ($query) {
             $query->where('user_ret_id', $this->user->id)->orWhere('user_id', $this->user->id);
-        })
+        })*/
         ->paginate(50);
 
         return view('livewire.admin.ordenes.index', compact('ordenes'));

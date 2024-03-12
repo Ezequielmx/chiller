@@ -30,7 +30,7 @@ class OrdenController extends Controller
         $orden = Ordene::find($id);
         $pdf = PDF::loadView('admin.ordenes.print', compact('orden'));
 
-        $filename = 'OR_N°' . $id . '_' . $orden->proveedor->razon_social . '_' . date('Ymd', strtotime($orden->fecha)) . '.pdf';
+        $filename = 'OR_N°' . $orden->nro . '_' . $orden->proveedor->razon_social . '_' . date('Ymd', strtotime($orden->fecha)) . '.pdf';
             $path = 'pdf/' . $filename;
 
             Storage::put($path, $pdf->output());

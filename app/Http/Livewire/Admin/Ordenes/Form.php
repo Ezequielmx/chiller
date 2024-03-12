@@ -18,6 +18,7 @@ use App\Models\OrdenDetalle;
 
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 
 class Form extends Component
@@ -88,18 +89,26 @@ class Form extends Component
             $this->orden->retirado = 0;
             $this->ordenDetalles = [];
         }
+
+        if (!$this->modeNew) {
+            $this->orden = Ordene::find($this->orden_id);
+        }
     }
 
     public function render()
     {
-        if ($this->orden->cliente_id) {
+        $this->obras = $this->orden->cliente_id ? Cliente::find($this->orden->cliente_id)->obras->where('activo', 1)->sortBy('nombre') : [];
+
+        //dd($this->orden->cliente_id);
+        /*if ($this->orden->cliente_id) {
             $this->obras = $this->orden->cliente->obras->where('activo', 1)->sortBy('nombre');
         } else {
             $this->obras = [];
-        }
+        }*/
+        //$this->ordenDetalles = $this->ordenDetalles->fresh();
 
         if (!$this->modeNew) {
-            $this->orden = Ordene::find($this->orden_id);
+            $this->orden->load('detalles');
             $this->ordenDetalles = $this->orden->detalles;
         }
 
@@ -143,6 +152,7 @@ class Form extends Component
             $ordenDetalle->precio = 0;
             $ordenDetalle->save();
         }
+
     }
 
     public function removeProduct($index)

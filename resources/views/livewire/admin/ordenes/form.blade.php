@@ -56,8 +56,8 @@
                     <div class="form-group">
                         <!--select for cliente-->
                         <label for="cliente_id">Cliente</label>
-                        <select class="form-control @error('orden.cliente_id') is-invalid" @enderror name="clientes"
-                            id="clientes" wire:model="orden.cliente_id">
+                        <select class="form-control @error('orden.cliente_id') is-invalid" @enderror name="cliente_id"
+                            id="cliente_id" wire:model="orden.cliente_id">
                             <option value="">Seleccione un cliente</option>
                             @foreach ($clientes as $cliente)
                             <option value="{{ $cliente->id }}">{{ $cliente->razon_social }}</option>
@@ -165,7 +165,6 @@
                         <button type="button" class="form-control btn btn-danger" wire:click='cancelarAutorizacion'>
                             <i class="fas fa-times"></i>
                         </button>
-
                         @endif
                     </div>
                     @endcan
@@ -174,6 +173,7 @@
 
             </div>
             @if(!$modeNew)
+            @can('orden.factura')
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -183,6 +183,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
             @endif
             <hr>
             <div class="row">
