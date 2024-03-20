@@ -53,11 +53,6 @@ class Ordene extends Model
         return $this->belongsTo(FormaPago::class);
     }
 
-    public function user_ret()
-    {
-        return $this->belongsTo(User::class, 'user_ret_id');
-    }
-
     public function user_aut()
     {
         return $this->belongsTo(User::class, 'user_aut_id');

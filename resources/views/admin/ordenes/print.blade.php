@@ -168,14 +168,14 @@ setlocale(LC_TIME, "spanish");
                 <h3>Presupuesto: <b>{{ $orden->obra->presupuesto }}</b></h3>  
             </td>
             <td style="width: 25%">
-                Solicitó
+                Autorizó
                 <h3><b>{{ $orden->user_solic? $orden->user_solic->name : '' }}</b></h3>
                 <hr>
                 Confeccionó
                 <h3><b>{{ $orden->user->name }}</b></h3>
             </td>
             <td style="width: 25%">
-                Autorizó
+                V.B.
                 <h3><b>{{ $orden->user_aut? $orden->user_aut->name : '' }}</b></h3>
             </td>
             <td style="width: 15%">
