@@ -162,8 +162,9 @@ setlocale(LC_TIME, "spanish");
 
         <table style="width:100%">
             <td style="width: 35%">
-                <h3>Retira: <b>{{ $orden->user_ret? $orden->user_ret->name : '' }}</b></h3>
+                <h3>Retira: <b>{{ $orden->retira? $orden->retira : '' }}</b></h3>
                 <hr>
+                <h3>Cliente: <b>{{ $orden->obra->cliente->razon_social }}</b></h3>
                 <h3>Obra: <b>{{ $orden->obra->nombre }}</b></h3>
                 <h3>Presupuesto: <b>{{ $orden->obra->presupuesto }}</b></h3>  
             </td>
