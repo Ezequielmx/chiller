@@ -7,10 +7,14 @@ use App\Models\Ordene;
 use App\Models\Proveedore;
 use Livewire\Component;
 use App\Models\Estado;
+use Livewire\WithPagination;
 use App\Models\User;
 
 class Index extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
     protected $listeners  = ['deleteOrden'];
     public $empresa_id;
     public $proveedor_id;

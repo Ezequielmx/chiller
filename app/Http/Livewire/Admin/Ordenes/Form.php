@@ -162,7 +162,6 @@ class Form extends Component
 
     public function updateCantidad(OrdenDetalle $ordenDetalle, $cantidad)
     {
-        dd($ordenDetalle);
         $ordenDetalle->cantidad = $cantidad;
         $ordenDetalle->save();
     }
