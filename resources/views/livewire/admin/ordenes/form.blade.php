@@ -25,15 +25,19 @@
                 <div class="col-6 col-sm-2">
                     <div class="form-group">
                         <label for="fecha">Fecha</label>
-                        <input type="date" class="form-control @error('orden.fecha') is-invalid @enderror"
-                            placeholder="Fecha" wire:model.defer="orden.fecha">
+                        <input type="date" class="form-control @error('orden.fecha') is-invalid @enderror readonly"
+                            placeholder="Fecha" wire:model.defer="orden.fecha" {{($orden->estado_id > 1 ||
+                        $orden->autorizado == 1)? 'disabled' : ''}}
+                        >
                         @error('orden.fecha') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="user_id">Creada por</label>
-                        <input type="text" class="form-control" disabled value={{ $orden->user->name }}>
+                        <input type="text" class="form-control" disabled value={{ $orden->user->name }}
+                        {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                        >
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -41,7 +45,9 @@
                         <!--select for empresa--->
                         <label for="empresa_id">Empresa solicitante</label>
                         <select class="form-control @error('orden.empresa_id') is-invalid" @enderror name="empresas"
-                            id="empresas" wire:model.defer="orden.empresa_id">
+                            id="empresas" wire:model.defer="orden.empresa_id" {{($orden->estado_id > 1 ||
+                            $orden->autorizado == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione una empresa</option>
                             @foreach ($empresas as $empresa)
                             <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
@@ -57,7 +63,9 @@
                         <!--select for cliente-->
                         <label for="cliente_id">Cliente</label>
                         <select class="form-control @error('orden.cliente_id') is-invalid" @enderror name="cliente_id"
-                            id="cliente_id" wire:model="orden.cliente_id">
+                            id="cliente_id" wire:model="orden.cliente_id" {{($orden->estado_id > 1 || $orden->autorizado
+                            == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione un cliente</option>
                             @foreach ($clientes as $cliente)
                             <option value="{{ $cliente->id }}">{{ $cliente->razon_social }}</option>
@@ -72,10 +80,12 @@
                         <!--select for obra-->
                         <label for="obra_id">Obra</label>
                         <select class="form-control @error('orden.obra_id') is-invalid" @enderror name="obras"
-                            id="obras" wire:model.defer="orden.obra_id">
+                            id="obras" wire:model.defer="orden.obra_id" {{($orden->estado_id > 1 || $orden->autorizado
+                            == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione una obra</option>
                             @foreach ($obras as $obra)
-                            <option value="{{ $obra->id }}">{{ $obra->nombre }}</option>
+                            <option value="{{ $obra->id }}">{{ $obra->presupuesto . ' - ' . $obra->nombre }}</option>
                             @endforeach
                         </select>
                         @error('orden.obra_id') <small class="text-danger">{{ $message }}</small>@enderror
@@ -87,7 +97,9 @@
                         <!--select for forma pago-->
                         <label for="forma_pago_id">Forma de pago</label>
                         <select class="form-control @error('orden.forma_pago_id') is-invalid" @enderror
-                            name="forma_pago_id" id="forma_pago_id" wire:model.defer="orden.forma_pago_id">
+                            name="forma_pago_id" id="forma_pago_id" wire:model.defer="orden.forma_pago_id"
+                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione una forma de pago</option>
                             @foreach ($formasPago as $formaPago)
                             <option value="{{ $formaPago->id }}">{{ $formaPago->descripcion }}</option>
@@ -99,35 +111,33 @@
 
             </div>
             <div class="row">
-
                 <div class="col-12 col-sm-4">
                     <div class="form-group">
                         <!--select for users_solic_id-->
-                        <label for="users_solic_id">Solicitada por</label>
-                        <select class="form-control" id="user_solic_id" wire:model.defer="orden.user_solic_id">
-                            <option value="">Seleccione un usuario</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('orden.users_solic_id') <small class="text-danger">{{ $message }}</small>@enderror
-                    </div>
-                </div>
-
-                <div class="col-9 col-sm-4">
-                    <div class="form-group">
-                        <!--select for users_ret_id-->
-                        <label for="users_ret_id">A retirar por</label>
-                        <select class="form-control @error('orden.user_ret_id') is-invalid" @enderror name="user_ret_id"
-                            id="user_ret_id" wire:model.defer="orden.user_ret_id">
+                        <label for="users_solic_id">Autorizada por</label>
+                        <select class="form-control" id="user_solic_id" wire:model.defer="orden.user_solic_id"
+                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione un usuario</option>
                             @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        @error('orden.users_ret_id') <small class="text-danger">{{ $message }}</small>@enderror
+                        @error('orden.user_solic_id') <small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>
+
+                <div class="col-9 col-sm-4">
+                    <div class="form-group">
+                        <label for="retira">A Retirar Por</label>
+                        <input type="text" class="form-control @error('orden.retira') is-invalid" @enderror
+                            name="retira" id="retira" wire:model.defer="orden.retira" {{($orden->estado_id > 1 ||
+                        $orden->autorizado == 1)? 'disabled' : ''}}
+                        >
+                        @error('orden.retira') <small class="text-danger">{{ $message }}</small>@enderror
+                    </div>
+                </div>
+
                 @if(!$modeNew)
                 <div class="col-3 col-sm-1">
                     <div class="form-group">
@@ -139,52 +149,67 @@
                 </div>
 
                 <div class="col-sm-1"></div>
+                @endif
+            </div>
 
+            <div class="row">
+                @if(!$modeNew)
+                <div class="col-12 col-sm-5">
+                    <div class="row">
+                        <div class="col-9 col-sm-10">
+                            <div class="form-group">
+                                <!--input for user_aut_id-->
+                                <label for="user_aut">V.B</label>
+                                <input type="text" class="form-control" name="user_aut" id="user_aut"
+                                    value="{{ $orden->user_aut_id? $orden->user_aut->name : '' }}" disabled>
+                            </div>
+                        </div>
 
-                <div class="col-9 col-sm-4">
-                    <div class="form-group">
-                        <!--input for user_aut_id-->
-                        <label for="user_aut">Autorizado por</label>
-                        <input type="text" class="form-control" name="user_aut" id="user_aut"
-                            value="{{ $orden->user_aut_id? $orden->user_aut->name : '' }}" disabled>
+                        <div class="col-3 col-sm-2">
+                            @can('orden.autorize')
+                            <div class="form-group">
+                                @if (!$orden->autorizado)
+                                <label>Autorizar</label>
+                                <!--boton para autorizar con icono check-->
+                                <button type="button" class="form-control btn btn-success" wire:click='autorizar'>
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                @else
+                                <label>Desaut. </label>
+                                <!--boton para cancelar autorizacion con icono x-->
+                                <button type="button" class="form-control btn btn-danger"
+                                    wire:click='cancelarAutorizacion'>
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                @endif
+                            </div>
+                            @endcan
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-3 col-sm-2">
-                    @can('orden.autorize')
-                    <div class="form-group">
-                        @if (!$orden->autorizado)
-                        <label>Autorizar</label>
-                        <!--boton para autorizar con icono check-->
-                        <button type="button" class="form-control btn btn-success" wire:click='autorizar'>
-                            <i class="fas fa-check"></i>
-                        </button>
-                        @else
-                        <label>Desaut. </label>
-                        <!--boton para cancelar autorizacion con icono x-->
-                        <button type="button" class="form-control btn btn-danger" wire:click='cancelarAutorizacion'>
-                            <i class="fas fa-times"></i>
-                        </button>
-                        @endif
+                    <div class="row">
+                        @can('orden.factura')
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <!--input for factura-->
+                                <label for="factura">Factura</label>
+                                <input type="text" class="form-control" placeholder="Factura"
+                                    wire:model.defer="orden.factura">
+                            </div>
+                        </div>
+                        @endcan
                     </div>
-                    @endcan
                 </div>
                 @endif
-
-            </div>
-            @if(!$modeNew)
-            @can('orden.factura')
-            <div class="row">
-                <div class="col-sm-4">
+                <div class="col">
                     <div class="form-group">
-                        <!--input for factura-->
-                        <label for="factura">Factura</label>
-                        <input type="text" class="form-control" placeholder="Factura" wire:model.defer="orden.factura">
+                        <!--input for observaciones multiline 3-->
+                        <label for="factura">Observaciones</label>
+                        <textarea class="form-control" rows="4" wire:model.defer="orden.observaciones"></textarea>
                     </div>
                 </div>
             </div>
-            @endcan
-            @endif
+
             <hr>
             <div class="row">
                 <div class="col-sm-4">
@@ -192,7 +217,9 @@
                         <!--select for proveedor-->
                         <label for="proveedor_id">Proveedor</label>
                         <select class="form-control @error('orden.proveedor_id') is-invalid" @enderror
-                            name="proveedores" id="proveedores" wire:model.defer="orden.proveedor_id">
+                            name="proveedores" id="proveedores" wire:model.defer="orden.proveedor_id"
+                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                            >
                             <option value="">Seleccione un proveedor</option>
                             @foreach ($proveedores as $proveedor)
                             <option value="{{ $proveedor->id }}">{{ $proveedor->razon_social }}</option>
@@ -212,8 +239,9 @@
                                 <tr>
                                     <th scope="col" class="text-center">Id</th>
                                     <th scope="col" class="text-center">Producto</th>
-                                    <th scope="col" class="text-center">Cantidad</th>
+                                    <th scope="col" class="text-center">Cant</th>
                                     <th scope="col" class="text-center" style="min-width: 125px;">Unidad</th>
+                                    <th scope="col" class="text-center" style="min-width: 125px;">Observ</th>
                                     <th scope="col" class="text-right" style="min-width: 125px;">Precio</th>
                                     <th></th>
                                 </tr>
@@ -224,7 +252,7 @@
                                 <tr>
                                     <td class="text-center">{{ $ordenDetalle['producto_id'] }}</td>
                                     <td class="text-center">{{ $ordenDetalle['producto']}}</td>
-                                    <td class="text-center">
+                                    <td class="text-center" style="max-width: 50px">
                                         <input type="number" wire:model="ordenDetalles.{{ $index }}.cantidad"
                                             class="form-control" min="1">
                                     </td>
@@ -241,6 +269,11 @@
 
                                     </td>
 
+                                    <td>
+                                        <input type="text" wire:model="ordenDetalles.{{ $index }}.observaciones"
+                                            class="form-control">
+                                    </td>
+
                                     <td class="text-right">
                                         <input type="number" step="any" wire:model="ordenDetalles.{{ $index }}.precio"
                                             class="form-control text-right">
@@ -255,7 +288,7 @@
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4" class="text-right">Total</td>
+                                    <td colspan="5" class="text-right">Total</td>
                                     <td class="text-right">
                                         {{ number_format(collect($ordenDetalles)->sum('precio'), 2, ',', '.') }}
                                     </td>
@@ -265,15 +298,19 @@
                                 <tr>
                                     <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
                                     <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
-                                    <td class="text-center">
+                                    <td class="text-center"  style="max-width: 50px">
                                         <input type="number"
                                             wire:change="updateCantidad({{ $ordenDetalle->id }}, $event.target.value)"
-                                            class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}">
+                                            class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}"
+                                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                                            >
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center" style="width: 50px">
                                         <!--select for unidad-->
                                         <select class="form-control" name="unidades" id="unidades"
-                                            wire:change='updateUnidad({{ $ordenDetalle->id }}, $event.target.value)'>
+                                            wire:change='updateUnidad({{ $ordenDetalle->id }}, $event.target.value)'
+                                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                                            >
                                             @foreach ($unidades as $unidad)
                                             <option value="{{ $unidad->id }}" {{ $unidad->id ==
                                                 $ordenDetalle->unidad_id?
@@ -282,22 +319,34 @@
                                         </select>
                                     </td>
 
-                                    <td>
-                                        <input type="number" step="any" value="{{ $ordenDetalle->precio }}"
-                                            class="form-control text-right"
-                                            wire:change='updatePrecio({{ $ordenDetalle->id }}, $event.target.value)'>
+                                    <td class="text-center" >
+                                        <input type="text" wire:change='updateObservaciones({{ $ordenDetalle->id }},
+                                            $event.target.value)' class="form-control"
+                                            value="{{ $ordenDetalle->observaciones }}"
+                                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                                            >
                                     </td>
 
-                                    <td class="text-center">
+                                    <td  style="width: 50px">
+                                        <input type="number" step="any" value="{{ $ordenDetalle->precio }}"
+                                            class="form-control text-right"
+                                            wire:change='updatePrecio({{ $ordenDetalle->id }}, $event.target.value)'
+                                            {{($orden->estado_id > 1 || $orden->autorizado == 1)? 'disabled' : ''}}
+                                            >
+                                    </td>
+
+                                    <td class="text-center" >
+                                        @if($orden->estado_id == 1 && $orden->autorizado == 0)
                                         <button type="button" class="btn btn-danger btn-sm"
                                             wire:click='removeProductG({{$ordenDetalle->id}})'>
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4" class="text-right">Total</td>
+                                    <td colspan="5" class="text-right">Total</td>
                                     <td class="text-right">
                                         {{ number_format($ordenDetalles->sum('precio'), 2, ',', '.') }}
                                     </td>
@@ -310,9 +359,11 @@
             </div>
             <!--button for addProduct-->
             <div class="row" style="justify-content: flex-end;">
+                @if($orden->estado_id == 1 && $orden->autorizado == 0)
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addProductModal">
                     Agregar Productos
                 </button>
+                @endif
             </div>
         </div>
 

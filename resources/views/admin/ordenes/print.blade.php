@@ -5,7 +5,7 @@ setlocale(LC_TIME, "spanish");
 @endphp
 
 <head>
-    <title>Cotización qqq</title>
+    <title>Orden de Retiro</title>
     <style>
         body {
             font-family: Calibri, sans-serif;
@@ -137,6 +137,7 @@ setlocale(LC_TIME, "spanish");
             <thead>
                 <th class="ths" style="width: 20%;">Cantidad</th>
                 <th class="ths">Producto</th>
+                <th class="ths">Observacion</th>
                 <th class="ths">Precio</th>
             </thead>
             <tbody>
@@ -144,12 +145,13 @@ setlocale(LC_TIME, "spanish");
                 <tr>
                     <td class="tds">{{ $detalle->cantidad }} {{ $detalle->unidad->nombre }}</td>
                     <td class="tds">{{ $detalle->producto->nombre }}</td>
+                    <td class="tds">{{ $detalle->observaciones }}</td>
                     <td class="tds" style="text-align: right;">${{ number_format($detalle->precio, 2, ',', '.') }}</td>
                 </tr>
                 @endforeach
                 <!-- fila de total con suma de precios -->
                 <tr>
-                    <td class="tds" colspan="2" style="text-align: right;">
+                    <td class="tds" colspan="3" style="text-align: right;">
                         <h3>Total:</h3>
                     </td>
                     <td class="tds" style="text-align: right;">
@@ -162,25 +164,31 @@ setlocale(LC_TIME, "spanish");
 
         <table style="width:100%">
             <td style="width: 35%">
-                <h3>Retira: <b>{{ $orden->user_ret? $orden->user_ret->name : '' }}</b></h3>
+                <h3>Retira: <b>{{ $orden->retira? $orden->retira : '' }}</b></h3>
                 <hr>
+                <h3>Cliente: <b>{{ $orden->obra->cliente->razon_social }}</b></h3>
                 <h3>Obra: <b>{{ $orden->obra->nombre }}</b></h3>
                 <h3>Presupuesto: <b>{{ $orden->obra->presupuesto }}</b></h3>  
             </td>
             <td style="width: 25%">
-                Solicitó
+                Autorizó
                 <h3><b>{{ $orden->user_solic? $orden->user_solic->name : '' }}</b></h3>
                 <hr>
                 Confeccionó
                 <h3><b>{{ $orden->user->name }}</b></h3>
             </td>
             <td style="width: 25%">
-                Autorizó
+                V.B.
                 <h3><b>{{ $orden->user_aut? $orden->user_aut->name : '' }}</b></h3>
             </td>
             <td style="width: 15%">
                 Factura N°
                 <h3><b>{{ $orden->factura}}</b></h3>
+            </td>
+        </table> 
+        <table style="width:100%">
+            <td>
+                <h3>Observaciones:</h3> {{ $orden->observaciones }}
             </td>
         </table>        
     </div>

@@ -55,12 +55,13 @@ class Form extends Component
         'orden.cliente_id' => 'required',
         'orden.obra_id' => 'required',
         'orden.forma_pago_id' => 'required',
-        'orden.user_ret_id' => 'required',
+        'orden.retira' => 'required',
         'orden.user_aut_id' => 'nullable',
-        'orden.user_solic_id' => 'nullable',
+        'orden.user_solic_id' => 'required',
         'orden.factura' => 'nullable',
         'orden.retirado' => 'required',
         'orden.estado_id' => 'required',
+        'orden.observaciones' => 'nullable',
     ];
 
     public function mount($id = null)
@@ -97,15 +98,7 @@ class Form extends Component
 
     public function render()
     {
-        $this->obras = $this->orden->cliente_id ? Cliente::find($this->orden->cliente_id)->obras->where('activo', 1)->sortBy('nombre') : [];
-
-        //dd($this->orden->cliente_id);
-        /*if ($this->orden->cliente_id) {
-            $this->obras = $this->orden->cliente->obras->where('activo', 1)->sortBy('nombre');
-        } else {
-            $this->obras = [];
-        }*/
-        //$this->ordenDetalles = $this->ordenDetalles->fresh();
+        $this->obras = $this->orden->cliente_id ? Cliente::find($this->orden->cliente_id)->obras->where('activo', 1)->sortBy('presupuesto') : [];
 
         if (!$this->modeNew) {
             $this->orden->load('detalles');
@@ -140,16 +133,18 @@ class Form extends Component
                 'producto_id' => $producto->id,
                 'producto' => $producto->nombre,
                 'cantidad' => 1,
-                'unidad_id' => 1,
-                'precio' => 0
+                'unidad_id' => 7,
+                'precio' => 0,
+                'observaciones' => '',
             ];
         } else {
             $ordenDetalle = new OrdenDetalle();
             $ordenDetalle->orden_id = $this->orden->id;
             $ordenDetalle->producto_id = $producto->id;
             $ordenDetalle->cantidad = 1;
-            $ordenDetalle->unidad_id = 1;
+            $ordenDetalle->unidad_id = 7;
             $ordenDetalle->precio = 0;
+            $ordenDetalle->observaciones = '';
             $ordenDetalle->save();
         }
 
@@ -177,12 +172,16 @@ class Form extends Component
         $ordenDetalle->save();
     }
 
+    public function updateObservaciones(OrdenDetalle $ordenDetalle, $observaciones)
+    {
+        $ordenDetalle->observaciones = $observaciones;
+        $ordenDetalle->save();
+    }
+
     public function updatePrecio(OrdenDetalle $ordenDetalle, $precio)
     {
         if ($precio == "")
             $precio = 0;
-
-
         $ordenDetalle->precio = $precio;
         $ordenDetalle->save();
     }
@@ -211,9 +210,10 @@ class Form extends Component
                 $ordenDetalle->producto_id = $detalle['producto_id'];
                 $ordenDetalle->cantidad = $detalle['cantidad'];
                 $ordenDetalle->unidad_id = $detalle['unidad_id'];
+                $ordenDetalle->precio = $detalle['precio'];
+                $ordenDetalle->observaciones = $detalle['observaciones'];
                 $ordenDetalle->save();
             }
-
 
             if ($mail) {
                 $this->sendMail();
@@ -273,26 +273,20 @@ class Form extends Component
 
         Storage::put($path, $pdf->output());
 
-        $emails = explode(';', $this->orden->proveedor->email);
-        $to = trim($emails[0]);
-        $cc = array_map('trim', array_slice($emails, 1));
+        $to = $this->orden->user_solic->email;
 
-        //add to cc the email of the user_solic of the order
-        if ($this->orden->user_solic_id) {
-            $cc[] = $this->orden->user_solic->email;
-        }
+        $emails = explode(';', $this->orden->proveedor->email);
+        $cc = implode(';', array_map('trim', $emails));
 
         try {
             Mail::to($to)
                 ->cc($cc)
                 ->send(new EnviaOrden($this->orden->empresa->email, $this->orden->empresa->razon_social, $this->orden->id, $path));
-
             $this->status_mail = 'Mail enviado';
             $this->orden->estado_id = 2;
         } catch (\Exception $e) {
             $this->status_mail = 'Error al enviar mail: ' . $e->getMessage();
         }
-
 
         $this->orden->save();
     }

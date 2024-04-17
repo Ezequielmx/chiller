@@ -32,7 +32,7 @@ class ProveedorController extends Controller
             'cuit' => 'required',
             'direccion' => 'required',
             'telefono' => 'required',
-            'email' => 'required',
+            'email' => 'nullable|email',
             'forma_pago_id' => 'required',
         ]);
 
@@ -54,7 +54,7 @@ class ProveedorController extends Controller
             'cuit' => 'required',
             'direccion' => 'required',
             'telefono' => 'required',
-            'email' => 'required',
+            'email' => 'nullable | email',
             'forma_pago_id' => 'required',
         ]);
 

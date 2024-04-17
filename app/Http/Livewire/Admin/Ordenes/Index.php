@@ -2,20 +2,31 @@
 
 namespace App\Http\Livewire\Admin\Ordenes;
 
+use App\Models\Empresa;
 use App\Models\Ordene;
 use App\Models\Proveedore;
 use Livewire\Component;
 use App\Models\Estado;
+use Livewire\WithPagination;
+use App\Models\User;
 
 class Index extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
     protected $listeners  = ['deleteOrden'];
+    public $empresa_id;
     public $proveedor_id;
     public $estado_id;
     public $finalizadas;
     public $aprobadas;
     public $user;
+    public $user_realiz_id;
 
+    public $empresas;
+    public $users;
+    
     public $proveedores;
     public $estados;
 
@@ -28,11 +39,19 @@ class Index extends Component
         $this->finalizadas = 0;
         $this->aprobadas = -1;
         $this->user = auth()->user();
+        $this->users = User::orderBy('name')->get();
+        $this->empresas = Empresa::all();
     }
 
     public function render()
     {
-        $ordenes = Ordene::orderBy('fecha')
+        $ordenes = Ordene::orderBy('nro')
+        ->when($this->empresa_id > 0, function ($query) {
+            $query->where('empresa_id', $this->empresa_id);
+        })
+        ->when($this->user_realiz_id > 0, function ($query) {
+            $query->where('user_id', $this->user_realiz_id);
+        })
         ->when($this->proveedor_id > 0, function ($query) {
             $query->where('proveedor_id', $this->proveedor_id);
         })
@@ -45,13 +64,6 @@ class Index extends Component
         ->when($this->aprobadas != -1, function ($query) {
             $query->where('autorizado', $this->aprobadas);
         })
-        ->when($this->user->hasRole('Operario Retiros'), function ($query) {
-            $query->where('user_ret_id', $this->user->id);
-        })
-        /*
-        ->when($this->user->hasRole('Generador Ordenes'), function ($query) {
-            $query->where('user_ret_id', $this->user->id)->orWhere('user_id', $this->user->id);
-        })*/
         ->paginate(50);
 
         return view('livewire.admin.ordenes.index', compact('ordenes'));
@@ -69,6 +81,8 @@ class Index extends Component
         $this->estado_id = 0;
         $this->finalizadas = 0;
         $this->aprobadas = -1;
+        $this->user_realiz_id = 0;
+        $this->empresa_id = 0;
     }
 
     public function autorizar($id)
