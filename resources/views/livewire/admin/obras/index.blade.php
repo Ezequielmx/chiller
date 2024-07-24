@@ -68,7 +68,7 @@
                             {{ $obra->id }}
                         </td>
                         <td>
-                            {{ $obra->cliente->razon_social }}
+                            {{ $obra->cliente? $obra->cliente->razon_social : '' }}
                         </td>
                         <td>
                             {{ $obra->nombre }}

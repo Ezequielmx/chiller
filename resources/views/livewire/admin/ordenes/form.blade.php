@@ -252,7 +252,7 @@
                                 <tr>
                                     <td class="text-center">{{ $ordenDetalle['producto_id'] }}</td>
                                     <td class="text-center">{{ $ordenDetalle['producto']}}</td>
-                                    <td class="text-center" style="max-width: 50px">
+                                    <td class="text-center" style="max-width: 100px">
                                         <input type="number" wire:model="ordenDetalles.{{ $index }}.cantidad"
                                             class="form-control" min="1">
                                     </td>
@@ -298,7 +298,7 @@
                                 <tr>
                                     <td class="text-center">{{ $ordenDetalle->producto_id }}</td>
                                     <td class="text-center">{{ $ordenDetalle->producto->nombre }}</td>
-                                    <td class="text-center"  style="max-width: 50px">
+                                    <td class="text-center"  style="max-width: 100px">
                                         <input type="number"
                                             wire:change="updateCantidad({{ $ordenDetalle->id }}, $event.target.value)"
                                             class="form-control" min="1" value="{{ $ordenDetalle->cantidad }}"
