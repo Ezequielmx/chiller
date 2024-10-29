@@ -21,11 +21,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 
+
+
 class Form extends Component
 {
     public $orden;
     public $orden_id;
     public $modeNew = true;
+
+    public $nro;
 
     public $empresas;
     public $proveedores;
@@ -45,7 +49,7 @@ class Form extends Component
 
     public $searchTerm;
 
-    protected $listeners = ['guardar'];
+    protected $listeners = ['guardar', 'render'];
 
     protected $rules = [
         'orden.empresa_id' => 'required',
@@ -75,12 +79,14 @@ class Form extends Component
         $this->rubros = Rubro::all();
         $this->unidades = Unidade::orderBy('nombre')->get();
 
+        
 
         if ($id) {
             $this->orden = Ordene::find($id);
             $this->orden_id = $id;
             $this->modeNew = false;
             $this->ordenDetalles = $this->orden->detalles;
+            $this->nro = $this->orden->nro;
         } else {
             $this->orden = new Ordene();
             $this->orden->estado_id = 1;
@@ -89,6 +95,7 @@ class Form extends Component
             $this->orden->user_id = auth()->user()->id;
             $this->orden->retirado = 0;
             $this->ordenDetalles = [];
+            $this->nro = null;
         }
 
         if (!$this->modeNew) {
@@ -166,6 +173,17 @@ class Form extends Component
         $ordenDetalle->save();
     }
 
+    public function updatedOrdenEmpresaId($value)
+    {
+        $nro = Ordene::where('empresa_id', $value)->max('nro') + 1;
+        //dd($nro);
+        $this->nro = $nro;
+        //refrescar render componente
+        $this->emit('render');
+
+    }
+
+
     public function updateUnidad(OrdenDetalle $ordenDetalle, $unidad_id)
     {
         $ordenDetalle->unidad_id = $unidad_id;
@@ -199,6 +217,9 @@ class Form extends Component
         if ($this->modeNew) {
             $nro = Ordene::where('empresa_id', $this->orden->empresa_id)->max('nro')+1;
             $this->orden->nro = $nro;
+        }
+        else{
+            $this->orden->nro = $this->nro;
         }
 
         $this->orden->save();

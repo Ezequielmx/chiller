@@ -19,7 +19,7 @@
                 <div class="col-6 col-sm-2">
                     <div class="form-group">
                         <label for="nro">Nro</label>
-                        <input type="text" class="form-control" disabled value={{ $modeNew? '' : $orden->nro }}>
+                        <input type="text" class="form-control" disabled wire:model="nro">
                     </div>
                 </div>
                 <div class="col-6 col-sm-2">
@@ -45,7 +45,8 @@
                         <!--select for empresa--->
                         <label for="empresa_id">Empresa solicitante</label>
                         <select class="form-control @error('orden.empresa_id') is-invalid" @enderror name="empresas"
-                            id="empresas" wire:model.defer="orden.empresa_id" {{($orden->estado_id > 1 ||
+                            id="empresas" wire:model="orden.empresa_id" 
+                            {{($orden->estado_id > 1 ||
                             $orden->autorizado == 1)? 'disabled' : ''}}
                             >
                             <option value="">Seleccione una empresa</option>
